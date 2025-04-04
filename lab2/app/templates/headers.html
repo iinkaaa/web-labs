@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Заголовки</h1>
+    <ul class="list-group">
+        {% for key, value in request.headers.items() %}
+            <li class="list-group-item"><b>{{ key }}:</b> {{ value }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

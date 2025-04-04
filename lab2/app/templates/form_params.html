@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Форма</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="phone" class="form-label">Номер телефона</label>
+            <input type="text" id="phone" name="phone" class="form-control {% if error %}is-invalid{% endif %}" value="{{ phone_number }}">
+            {% if error %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Проверить</button>
+    </form>
+    {% if phone_number %}
+        <h2>Отформатированный номер: {{ phone_number }}</h2>
+    {% endif %}
+
+    <h1>Параметры формы</h1>
+    <ul class="list-group">
+        {% for key, value in request.form.items() %}
+            <li class="list-group-item"><b>{{ key }}:</b> {{ value }}</li>
+        {% endfor %}
+        {% if f_phone %}
+            <li class="list-group-item"><b>Телефон после валидации</b> {{ f_phone }}</li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
