@@ -5,6 +5,8 @@
     <ul class="list-group">
         {% for key, value in request.args.items() %}
             <li class="list-group-item"><b>{{ key }}:</b> {{ value }}</li>
+            {% else %}
+            <p>нет параметров</p>
         {% endfor %}
     </ul>
 {% endblock %}

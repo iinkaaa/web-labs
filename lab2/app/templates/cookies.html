@@ -5,6 +5,8 @@
     <ul class="list-group">
         {% for key, value in request.cookies.items() %}
             <li class="list-group-item"><b>{{ key }}:</b> {{ value }}</li>
+            {% else %}
+            <p>нет cookie</p>
         {% endfor %}
     </ul>
 {% endblock %}
