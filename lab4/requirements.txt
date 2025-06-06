@@ -9,6 +9,7 @@ six==1.16.0
 Werkzeug==2.0.3
 gunicorn
 flask-login
-flask-sqlalchemy
 flask_bootstrap
 flask_wtf
+flask-sqlalchemy==3.0.3
+sqlalchemy==2.0.15
