@@ -11,5 +11,5 @@ gunicorn
 flask-login
 flask_bootstrap
 flask_wtf
-flask-sqlalchemy==3.0.3
-sqlalchemy==2.0.15
+flask-sqlalchemy
+sqlalchemy
