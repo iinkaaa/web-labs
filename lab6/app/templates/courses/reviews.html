@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% from 'pagination.html' import render_pagination %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Отзывы к курсу «{{ course.name }}»</h2>
+
+    <!-- Форма фильтрации -->
+    <form class="row g-3 mb-4" method="get">
+        <div class="col-auto">
+            <label for="sort" class="form-label">Сортировать:</label>
+            <select name="sort" id="sort" class="form-select">
+                <option value="newest"  {% if sort=='newest'  %}selected{% endif %}>По новизне</option>
+                <option value="positive"{% if sort=='positive'%}selected{% endif %}>Сначала положительные</option>
+                <option value="negative"{% if sort=='negative'%}selected{% endif %}>Сначала отрицательные</option>
+            </select>
+        </div>
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-dark">Применить</button>
+        </div>
+    </form>
+
+    <!-- Сами отзывы -->
+    {% if reviews %}
+        {% for rev in reviews %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex mb-2">
+                        <strong>{{ rev.user.full_name }}</strong>
+                        <span class="ms-auto text-muted" style="font-size:0.9em;">
+                            {{ rev.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </span>
+                    </div>
+                    <p>
+                        Оценка:
+                        {% for i in range(rev.rating) %}★{% endfor %}
+                        {% for i in range(5-rev.rating) %}☆{% endfor %}
+                    </p>
+                    <p>{{ rev.text }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center text-muted">Пока нет ни одного отзыва.</p>
+    {% endif %}
+
+    <!-- Пагинация -->
+    <div class="mt-4">
+        {{ render_pagination(pagination, request.endpoint, {'course_id': course.id, 'sort': sort}) }}
+    </div>
+
+    <div class="my-5">
+        {% if not current_user.is_authenticated %}
+            <p class="text-center">Чтобы оставить отзыв, нужно <a href="{{ url_for('auth.login') }}">войти</a>.</p>
+        {% else %}
+            {% if user_review %}
+                <h4>Ваш отзыв</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <p><strong>Оценка:</strong>
+                            {% for i in range(user_review.rating) %}★{% endfor %}
+                            {% for i in range(5 - user_review.rating) %}☆{% endfor %}
+                        </p>
+                        <p>{{ user_review.text }}</p>
+                        <p class="text-muted" style="font-size:0.9em;">
+                            {{ user_review.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </p>
+                    </div>
+                </div>
+            {% else %}
+                <h4>Оставить отзыв</h4>
+                <form method="post" action="{{ url_for('courses.add_review', course_id=course.id) }}">
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Оценка</label>
+                        <select id="rating" name="rating" class="form-select">
+                            <option value="5">Отлично</option>
+                            <option value="4">Хорошо</option>
+                            <option value="3">Удовлетворительно</option>
+                            <option value="2">Неудовлетворительно</option>
+                            <option value="1">Плохо</option>
+                            <option value="0">Ужасно</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Текст отзыва</label>
+                        <textarea id="text" name="text" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark">Отправить</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
